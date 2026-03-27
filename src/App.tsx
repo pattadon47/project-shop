@@ -16,7 +16,7 @@ import ManageProducts from './pages/admin/ManageProducts';
 import ManageMembers from './pages/admin/ManageMembers';
 import MemberOrders from './pages/admin/MemberOrders';
 
-import './App.css'; 
+import './App.css';
 
 function App() {
   return (
@@ -34,7 +34,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/orders" element={<OrderHistory />} />
-          
+
           {/* Admin Routes */}
           <Route element={<ProtectedRoute requiredRole="Admin" />}>
             <Route path="/admin" element={<AdminDashboard />} />

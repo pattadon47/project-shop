@@ -1,18 +1,147 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ProductCard, { type Product } from '../components/ProductCard';
 import api from '../services/api';
+import './Home.css';
 
-// dummy products fallback for demonstration if API fails
-const DUMMY_PRODUCTS: Product[] = [
-  { id: '1', name: 'Pro Running Shoes', price: 120.00, description: 'High performance running shoes.', imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff' },
-  { id: '2', name: 'Yoga Mat', price: 30.00, description: 'Premium non-slip yoga mat.', imageUrl: 'https://images.unsplash.com/photo-1601134767222-1d70e41753c1' },
-  { id: '3', name: 'Dumbbell Set', price: 85.00, description: 'Adjustable dumbbell set for home gym.', imageUrl: 'https://images.unsplash.com/photo-1638204090176-b33df64ccb61' },
-  { id: '4', name: 'Protein Powder', price: 45.00, description: 'Whey protein isolate, chocolate flavor.', imageUrl: 'https://images.unsplash.com/photo-1579722820308-d74e571900a9' }
+// ── Categorised dummy data ──────────────────────────────────────────────────
+interface Category {
+  id: string;
+  label: string;
+  icon: string;
+  products: Product[];
+}
+
+const CATEGORIES: Category[] = [
+  {
+    id: 'weightlifting',
+    label: 'ยกน้ำหนัก',
+    icon: '🏋️',
+    products: [
+      {
+        id: 'w1',
+        name: 'บาร์เบลล์ Olympic มาตรฐาน 20 kg',
+        description: 'บาร์เบลล์เหล็กชุบโครเมี่ยม ขนาดมาตรฐาน Olympic ยาว 220 cm รับน้ำหนักสูงสุด 300 kg เหมาะทั้งมือใหม่และนักกีฬาอาชีพ',
+        price: 3500,
+        imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80',
+      },
+      {
+        id: 'w2',
+        name: 'ดัมเบลล์ปรับน้ำหนัก 5–32.5 kg',
+        description: 'ดัมเบลล์แบบ dial-select ปรับน้ำหนักได้ 15 ระดับ ประหยัดพื้นที่ เหมาะสำหรับโฮมยิม',
+        price: 4800,
+        imageUrl: 'https://images.unsplash.com/photo-1526401485004-46910ecc8e51?w=600&q=80',
+      },
+      {
+        id: 'w3',
+        name: 'แท่นยกน้ำหนัก Adjustable Bench',
+        description: 'ม้านั่งยกน้ำหนักปรับองศาได้ 7 ระดับ (0°–85°) โครงเหล็กหนา รับน้ำหนักได้ถึง 300 kg',
+        price: 5500,
+        imageUrl: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=80',
+      },
+      {
+        id: 'w4',
+        name: 'แผ่นน้ำหนัก Olympic 20 kg (คู่)',
+        description: 'แผ่นน้ำหนักหุ้มยาง Olympic รู 50 mm ลดเสียงกระแทก มาเป็นคู่ (2×20 kg)',
+        price: 2800,
+        imageUrl: 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&q=80',
+      },
+    ],
+  },
+  {
+    id: 'cardio',
+    label: 'วิ่ง & Cardio',
+    icon: '🏃',
+    products: [
+      {
+        id: 'c1',
+        name: 'รองเท้าวิ่ง Pro Runner X9',
+        description: 'รองเท้าวิ่งเทคโนโลยี carbon-fiber plate รองรับแรงกระแทกสูง เบาเพียง 220 g เหมาะทุกระยะทาง',
+        price: 3200,
+        imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80',
+      },
+      {
+        id: 'c2',
+        name: 'เชือกกระโดด Speed Rope Bearing',
+        description: 'เชือกกระโดดความเร็วสูง สายเคเบิลเคลือบเหล็ก ball-bearing ด้ามจับ 360° หมุนลื่น',
+        price: 450,
+        imageUrl: 'https://images.unsplash.com/photo-1434682881908-b43d0467b798?w=600&q=80',
+      },
+      {
+        id: 'c3',
+        name: 'ลู่วิ่งไฟฟ้า Treadmill Foldable',
+        description: 'ลู่วิ่งไฟฟ้าพับได้ มอเตอร์ 2.5 HP ความเร็ว 1–16 km/h หน้าจอ LCD และระบบกันกระแทกแบบ multi-layer',
+        price: 18500,
+        imageUrl: 'https://images.unsplash.com/photo-1576678927484-cc907957088c?w=600&q=80',
+      },
+    ],
+  },
+  {
+    id: 'yoga',
+    label: 'โยคะ & Stretch',
+    icon: '🧘',
+    products: [
+      {
+        id: 'y1',
+        name: 'เสื่อโยคะ Premium TPE 10 mm',
+        description: 'เสื่อโยคะ TPE ไม่มีสารพิษ หนา 10 mm กันลื่นสองด้าน น้ำหนักเบา พร้อมสายรัด',
+        price: 890,
+        imageUrl: 'https://images.unsplash.com/photo-1601134767222-1d70e41753c1?w=600&q=80',
+      },
+      {
+        id: 'y2',
+        name: 'แถบยางยืดออกกำลังกาย 5 ระดับ',
+        description: 'Resistance band ชุด 5 เส้น แรงต้าน 5–40 lbs เหมาะสำหรับการยืดเหยียด กายภาพบำบัด และฝึกแรง',
+        price: 380,
+        imageUrl: 'https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=600&q=80',
+      },
+      {
+        id: 'y3',
+        name: 'โฟมโรลเลอร์นวดกล้ามเนื้อ',
+        description: 'Foam roller พื้นผิวนูนช่วยนวดกล้ามเนื้อลึก บรรเทาอาการตึงและช่วยฟื้นฟูหลังออกกำลังกาย',
+        price: 550,
+        imageUrl: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80',
+      },
+    ],
+  },
+  {
+    id: 'supplement',
+    label: 'Supplement',
+    icon: '💊',
+    products: [
+      {
+        id: 's1',
+        name: 'Whey Protein Isolate รสช็อคโกแลต 2 kg',
+        description: 'เวย์โปรตีนไอโซเลท โปรตีน 27 g ต่อเสิร์ฟ ไขมัน 0 g ละลายง่าย 60 เสิร์ฟต่อถัง',
+        price: 1650,
+        imageUrl: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=600&q=80',
+      },
+      {
+        id: 's2',
+        name: 'Creatine Monohydrate 500 g',
+        description: 'Creatine บริสุทธิ์ 100% เพิ่มความแข็งแกร่ง ฟื้นฟูกล้ามเนื้อเร็ว ไม่มีน้ำตาล ไม่มีสี',
+        price: 750,
+        imageUrl: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=600&q=80',
+      },
+      {
+        id: 's3',
+        name: 'BCAA Amino Acid รสสตรอว์เบอรี่ 300 g',
+        description: 'BCAA อัตราส่วน 2:1:1 ช่วยป้องกันการสลายกล้ามเนื้อ เพิ่มความทนทาน ดื่มง่ายไม่มีน้ำตาล',
+        price: 890,
+        imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80',
+      },
+    ],
+  },
 ];
+
+const FLAT_PRODUCTS: Product[] = CATEGORIES.flatMap(c => c.products);
 
 const Home = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string>('all');
   const [loading, setLoading] = useState(true);
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -20,8 +149,8 @@ const Home = () => {
         const response = await api.get('/products');
         setProducts(response.data);
       } catch {
-        console.warn('Failed to fetch from API, using dummy mock data.');
-        setProducts(DUMMY_PRODUCTS);
+        console.warn('Failed to fetch from API, using categorised mock data.');
+        setProducts(FLAT_PRODUCTS);
       } finally {
         setLoading(false);
       }
@@ -29,23 +158,170 @@ const Home = () => {
     fetchProducts();
   }, []);
 
-  return (
-    <div className="page-wrapper container">
-      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-        <h1>Welcome to SportShop</h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem' }}>Premium sports equipment for your fitness journey.</p>
-      </div>
+  // Scroll-reveal animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      },
+      { threshold: 0.12 }
+    );
+    const items = document.querySelectorAll('.reveal');
+    items.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, [loading]);
 
-      {loading ? (
-        <div style={{ textAlign: 'center' }}><h2>Loading...</h2></div>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '2rem' }}>
-          {products.map(product => (
-            <ProductCard key={product.id} product={product} />
+  // Use API data flat if loaded, otherwise use categorised dummy
+  const usingApi = products.length > 0 && products[0].id !== 'w1';
+
+  return (
+    <>
+      {/* ── Hero Section ── */}
+      <section className="hero">
+        <div className="hero-bg" />
+        <div className="hero-content">
+          <div className="hero-text">
+            <p className="hero-eyebrow">🏋️ ร้านอุปกรณ์ออกกำลังกาย #1</p>
+            <h1 className="hero-title">
+              ยกหนักกว่า<br />
+              <span className="hero-title-highlight">ทำลายขีดจำกัด</span>
+            </h1>
+            <p className="hero-desc">
+              อุปกรณ์ออกกำลังกายและยกน้ำหนักคุณภาพสูง<br />
+              ครบทุกความต้องการ ส่งตรงถึงบ้าน
+            </p>
+            <div className="hero-actions">
+              <button className="hero-btn-primary" onClick={() => {
+                document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' });
+              }}>
+                ดูสินค้าทั้งหมด
+              </button>
+              <button className="hero-btn-outline" onClick={() => {
+                document.getElementById('about-section')?.scrollIntoView({ behavior: 'smooth' });
+              }}>
+                ประวัติร้าน
+              </button>
+            </div>
+          </div>
+
+          <div className="hero-image-wrap">
+            <div className="hero-glow" />
+            <img
+              src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=900"
+              alt="Gym Equipment"
+              className="hero-image"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ── Products Section ── */}
+      <section id="products-section" className="products-section container">
+        <div className="section-header">
+          <h2>สินค้าของเรา</h2>
+          <p>อุปกรณ์ออกกำลังกายคุณภาพสูง ราคาคุ้มค่า พร้อมจัดส่งทั่วประเทศ</p>
+        </div>
+
+        {/* Category filter tabs */}
+        <div className="cat-tabs">
+          <button
+            className={`cat-tab ${activeCategory === 'all' ? 'active' : ''}`}
+            onClick={() => setActiveCategory('all')}
+          >
+            🛍️ ทั้งหมด
+          </button>
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat.id}
+              className={`cat-tab ${activeCategory === cat.id ? 'active' : ''}`}
+              onClick={() => setActiveCategory(cat.id)}
+            >
+              {cat.icon} {cat.label}
+            </button>
           ))}
         </div>
-      )}
-    </div>
+
+        {loading ? (
+          <div className="loading-wrap">
+            <div className="spinner" />
+            <p>กำลังโหลดสินค้า...</p>
+          </div>
+        ) : usingApi ? (
+          /* API data — flat grid */
+          <div className="products-grid">
+            {products.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          /* Dummy data — grouped by category */
+          (activeCategory === 'all' ? CATEGORIES : CATEGORIES.filter(c => c.id === activeCategory)).map(cat => (
+            <div key={cat.id} className="category-section">
+              <h3 className="category-heading">
+                <span className="cat-icon">{cat.icon}</span>
+                {cat.label}
+                <span className="cat-count">{cat.products.length} รายการ</span>
+              </h3>
+              <div className="products-grid">
+                {cat.products.map(product => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            </div>
+          ))
+        )}
+      </section>
+
+
+      {/* ── About / Store History Section ── */}
+      <section id="about-section" className="about-section" ref={aboutRef}>
+        <div className="about-inner container">
+          <div className="reveal about-text-block">
+            <p className="about-eyebrow">ประวัติร้านเรา</p>
+            <h2 className="about-title">YimHaikan<br /><span>เราคือใคร?</span></h2>
+            <p className="about-desc">
+              YimHaikan พึ่งก็ตั้งขึ้น โดยพัทธดนย์ อาจหาญ และ นวพล ปานประเสริธแสง
+            </p>
+            <p className="about-desc">
+              เราคัดสรรเฉพาะสินค้าที่ผ่านการทดสอบคุณภาพ ไม่ว่าจะเป็นบาร์เบลล์ ดัมเบลล์ แท่นยกน้ำหนัก หรืออุปกรณ์เสริมทุกประเภท
+              พร้อมบริการหลังการขายที่ใส่ใจลูกค้าทุกคน
+            </p>
+            <button
+              className="hero-btn-primary"
+              style={{ marginTop: '1.5rem' }}
+              onClick={() => navigate('/register')}
+            >
+              เข้าร่วมกับเรา →
+            </button>
+          </div>
+
+          <div className="reveal about-stats-block">
+            {[
+              { icon: '🏪', num: '6+', label: 'ปีแห่งประสบการณ์' },
+              { icon: '📦', num: '500+', label: 'รายการสินค้า' },
+              { icon: '🚚', num: '50K+', label: 'ลูกค้าทั่วประเทศ' },
+              { icon: '⭐', num: '4.9', label: 'คะแนนความพึงพอใจ' },
+            ].map(stat => (
+              <div key={stat.label} className="stat-card">
+                <span className="stat-icon">{stat.icon}</span>
+                <span className="stat-num">{stat.num}</span>
+                <span className="stat-label">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer className="site-footer">
+        <div className="container">
+          <div className="footer-brand">⚡ YimHaikan</div>
+          <p className="footer-copy">© 2025 YimHaikan. All rights reserved. | ร้านขายอุปกรณ์ออกกำลังกายออนไลน์</p>
+        </div>
+      </footer>
+    </>
   );
 };
 
