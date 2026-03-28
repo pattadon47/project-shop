@@ -53,7 +53,7 @@ export interface Member {
   lastname: string;
   email: string;
   role: 'Member' | 'Admin';
-  status: 'active' | 'inactive';
+
 }
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────

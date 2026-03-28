@@ -32,7 +32,6 @@ const Register = () => {
         firstname: form.firstname,
         lastname: form.lastname,
         role: 'Member',
-        status: 'active',
       });
       navigate('/');
     } finally {

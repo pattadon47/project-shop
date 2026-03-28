@@ -24,6 +24,7 @@ const CATEGORIES: Category[] = [
         description: 'บาร์เบลล์เหล็กชุบโครเมี่ยม ขนาดมาตรฐาน Olympic ยาว 220 cm รับน้ำหนักสูงสุด 300 kg เหมาะทั้งมือใหม่และนักกีฬาอาชีพ',
         price: 3500,
         imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80',
+        stock: 15,
       },
       {
         id: 'w2',
@@ -31,6 +32,7 @@ const CATEGORIES: Category[] = [
         description: 'ดัมเบลล์แบบ dial-select ปรับน้ำหนักได้ 15 ระดับ ประหยัดพื้นที่ เหมาะสำหรับโฮมยิม',
         price: 4800,
         imageUrl: 'https://images.unsplash.com/photo-1526401485004-46910ecc8e51?w=600&q=80',
+        stock: 0,
       },
       {
         id: 'w3',
@@ -38,6 +40,7 @@ const CATEGORIES: Category[] = [
         description: 'ม้านั่งยกน้ำหนักปรับองศาได้ 7 ระดับ (0°–85°) โครงเหล็กหนา รับน้ำหนักได้ถึง 300 kg',
         price: 5500,
         imageUrl: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=80',
+        stock: 10,
       },
       {
         id: 'w4',
@@ -45,6 +48,7 @@ const CATEGORIES: Category[] = [
         description: 'แผ่นน้ำหนักหุ้มยาง Olympic รู 50 mm ลดเสียงกระแทก มาเป็นคู่ (2×20 kg)',
         price: 2800,
         imageUrl: 'https://plus.unsplash.com/premium_photo-1726768835872-7f68fb50eca6?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        stock: 5,
       },
     ],
   },
@@ -59,6 +63,7 @@ const CATEGORIES: Category[] = [
         description: 'รองเท้าวิ่งเทคโนโลยี carbon-fiber plate รองรับแรงกระแทกสูง เบาเพียง 220 g เหมาะทุกระยะทาง',
         price: 3200,
         imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80',
+        stock: 30,
       },
       {
         id: 'c2',
@@ -66,6 +71,7 @@ const CATEGORIES: Category[] = [
         description: 'เชือกกระโดดความเร็วสูง สายเคเบิลเคลือบเหล็ก ball-bearing ด้ามจับ 360° หมุนลื่น',
         price: 450,
         imageUrl: 'https://images.unsplash.com/photo-1651315283994-03ec73dc21f1?q=80&w=1025&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        stock: 50,
       },
       {
         id: 'c3',
@@ -73,6 +79,7 @@ const CATEGORIES: Category[] = [
         description: 'ลู่วิ่งไฟฟ้าพับได้ มอเตอร์ 2.5 HP ความเร็ว 1–16 km/h หน้าจอ LCD และระบบกันกระแทกแบบ multi-layer',
         price: 18500,
         imageUrl: 'https://images.unsplash.com/photo-1591940765155-0604537032a5?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        stock: 3,
       },
     ],
   },
@@ -87,6 +94,7 @@ const CATEGORIES: Category[] = [
         description: 'เสื่อโยคะ TPE ไม่มีสารพิษ หนา 10 mm กันลื่นสองด้าน น้ำหนักเบา พร้อมสายรัด',
         price: 890,
         imageUrl: 'https://images.unsplash.com/photo-1592432678016-e910b452f9a2?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        stock: 40,
       },
       {
         id: 'y2',
@@ -94,6 +102,7 @@ const CATEGORIES: Category[] = [
         description: 'Resistance band ชุด 5 เส้น แรงต้าน 5–40 lbs เหมาะสำหรับการยืดเหยียด กายภาพบำบัด และฝึกแรง',
         price: 380,
         imageUrl: 'https://images.unsplash.com/photo-1672804591677-e859bf816875?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        stock: 0,
       },
       {
         id: 'y3',
@@ -101,6 +110,7 @@ const CATEGORIES: Category[] = [
         description: 'Foam roller พื้นผิวนูนช่วยนวดกล้ามเนื้อลึก บรรเทาอาการตึงและช่วยฟื้นฟูหลังออกกำลังกาย',
         price: 550,
         imageUrl: 'https://plus.unsplash.com/premium_photo-1666736569451-121617facc47?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        stock: 25,
       },
     ],
   },
@@ -115,6 +125,7 @@ const CATEGORIES: Category[] = [
         description: 'เวย์โปรตีนไอโซเลท โปรตีน 27 g ต่อเสิร์ฟ ไขมัน 0 g ละลายง่าย 60 เสิร์ฟต่อถัง',
         price: 1650,
         imageUrl: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=600&q=80',
+        stock: 60,
       },
       {
         id: 's2',
@@ -122,6 +133,7 @@ const CATEGORIES: Category[] = [
         description: 'Creatine บริสุทธิ์ 100% เพิ่มความแข็งแกร่ง ฟื้นฟูกล้ามเนื้อเร็ว ไม่มีน้ำตาล ไม่มีสี',
         price: 750,
         imageUrl: 'https://images.unsplash.com/photo-1693996046514-0406d0773a7d?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        stock: 40,
       },
       {
         id: 's3',
@@ -129,6 +141,7 @@ const CATEGORIES: Category[] = [
         description: 'BCAA อัตราส่วน 2:1:1 ช่วยป้องกันการสลายกล้ามเนื้อ เพิ่มความทนทาน ดื่มง่ายไม่มีน้ำตาล',
         price: 890,
         imageUrl: 'https://images.unsplash.com/photo-1572359896611-094c2cb3e609?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        stock: 50,
       },
     ],
   },

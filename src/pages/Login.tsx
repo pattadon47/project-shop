@@ -29,7 +29,6 @@ const Login = () => {
         firstname: role === 'Admin' ? 'Super' : 'John',
         lastname: role === 'Admin' ? 'Admin' : 'Doe',
         role,
-        status: 'active',
       });
       navigate('/');
     } finally {
@@ -66,6 +65,12 @@ const Login = () => {
         <div className="auth-card-new">
           <h3 className="auth-card-title">เข้าสู่ระบบ</h3>
           <p className="auth-card-sub">เข้าสู่ระบบเพื่อเริ่มต้น</p>
+
+          <div style={{ background: 'rgba(128, 128, 128, 0.1)', borderLeft: '3px solid var(--primary)', padding: '12px', borderRadius: '6px', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem', textAlign: 'left', lineHeight: '1.6' }}>
+            <strong style={{ color: 'var(--text)' }}>💡 บัญชีทดลองใช้งาน:</strong><br />
+            • <b>ผู้ดูแลระบบ (Admin):</b> ใช้อีเมล <code>admin</code> (เช่น admin@test.com)<br />
+            * รหัสผ่าน: 1234 
+          </div>
 
           {error && <div className="auth-error">{error}</div>}
 

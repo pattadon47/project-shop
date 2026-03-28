@@ -28,7 +28,7 @@ const AdminDashboard = () => {
             <Users size={40} color="var(--secondary)" />
           </div>
           <h2 style={{ marginBottom: '0.5rem' }}>Manage Members</h2>
-          <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>View all registered members, change roles, or update statuses.</p>
+          <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>View all registered members and change roles.</p>
         </Link>
 
         {/* View Orders Card */}

@@ -3,9 +3,9 @@ import { memberService } from '../../services/api';
 import type { Member } from '../../types';
 
 const MOCK_MEMBERS: Member[] = [
-  { id: 'usr_1', firstname: 'John', lastname: 'Doe', email: 'john@example.com', role: 'Member', status: 'active' },
-  { id: 'usr_2', firstname: 'Super', lastname: 'Admin', email: 'admin@example.com', role: 'Admin', status: 'active' },
-  { id: 'usr_3', firstname: 'Jane', lastname: 'Smith', email: 'jane@example.com', role: 'Member', status: 'inactive' },
+  { id: 'usr_1', firstname: 'John', lastname: 'Doe', email: 'john@example.com', role: 'Member' },
+  { id: 'usr_2', firstname: 'Super', lastname: 'Admin', email: 'admin@example.com', role: 'Admin' },
+  { id: 'usr_3', firstname: 'Jane', lastname: 'Smith', email: 'jane@example.com', role: 'Member' },
 ];
 
 const ManageMembers = () => {
@@ -26,16 +26,6 @@ const ManageMembers = () => {
     };
     fetch();
   }, []);
-
-  const toggleStatus = async (m: Member) => {
-    const newStatus = m.status === 'active' ? 'inactive' : 'active';
-    try {
-      const updated = await memberService.changeStatus(m.id, newStatus);
-      setMembers(members.map(x => x.id === m.id ? updated : x));
-    } catch {
-      setMembers(members.map(x => x.id === m.id ? { ...x, status: newStatus } : x));
-    }
-  };
 
   const toggleRole = async (m: Member) => {
     const newRole = m.role === 'Member' ? 'Admin' : 'Member';
@@ -76,7 +66,6 @@ const ManageMembers = () => {
                 <th style={{ padding: '1rem' }}>Name</th>
                 <th style={{ padding: '1rem' }}>Email</th>
                 <th style={{ padding: '1rem' }}>Role</th>
-                <th style={{ padding: '1rem' }}>Status</th>
                 <th style={{ padding: '1rem' }}>Actions</th>
               </tr>
             </thead>
@@ -91,23 +80,7 @@ const ManageMembers = () => {
                     </span>
                   </td>
                   <td style={{ padding: '1rem' }}>
-                    <span style={{
-                      padding: '0.25rem 0.6rem', borderRadius: '1rem', fontSize: '0.8rem',
-                      background: m.status === 'active' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
-                      color: m.status === 'active' ? 'var(--success)' : 'var(--danger)',
-                    }}>
-                      {m.status}
-                    </span>
-                  </td>
-                  <td style={{ padding: '1rem' }}>
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      <button
-                        className="btn-primary"
-                        style={{ padding: '0.4rem 0.8rem', fontSize: '0.82rem', background: m.status === 'active' ? 'rgba(239,68,68,0.7)' : 'rgba(16,185,129,0.7)' }}
-                        onClick={() => toggleStatus(m)}
-                      >
-                        {m.status === 'active' ? 'Deactivate' : 'Activate'}
-                      </button>
                       <button
                         className="btn-primary"
                         style={{ padding: '0.4rem 0.8rem', fontSize: '0.82rem', background: m.role === 'Member' ? '#f59e0b' : '#64748b' }}

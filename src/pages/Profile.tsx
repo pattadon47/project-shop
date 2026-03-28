@@ -57,16 +57,6 @@ const Profile = () => {
               style={{ opacity: 0.6, color: user?.role === 'Admin' ? '#f59e0b' : 'inherit' }}
             />
           </div>
-          <div className="form-group">
-            <label>Status</label>
-            <input
-              type="text"
-              className="input-field"
-              value={user?.status || ''}
-              disabled
-              style={{ opacity: 0.6, color: user?.status === 'active' ? 'var(--success)' : 'var(--danger)' }}
-            />
-          </div>
           <div style={{ display: 'flex', gap: '1rem' }}>
             <div className="form-group" style={{ flex: 1 }}>
               <label>First Name</label>

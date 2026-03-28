@@ -38,7 +38,7 @@ export const productService = {
   update: (id: string, data: Partial<Omit<Product, 'id'>>): Promise<Product> =>
     api.put(`/products/${id}`, data).then((r) => r.data),
 
-  /** DELETE /products/:id — ลบสินค้า [Admin] */
+  /** DELETE /products/:id — ลบสินค้า [Admin] */  
   delete: (id: string): Promise<void> =>
     api.delete(`/products/${id}`).then(() => undefined),
 };
@@ -71,10 +71,6 @@ export const memberService = {
   /** GET /members — ดูสมาชิกทั้งหมด [Admin] */
   getAll: (): Promise<Member[]> =>
     api.get('/members').then((r) => r.data),
-
-  /** PATCH /members/:id/status — เปลี่ยน status active/inactive [Admin] */
-  changeStatus: (id: string, status: 'active' | 'inactive'): Promise<Member> =>
-    api.patch(`/members/${id}/status`, { status }).then((r) => r.data),
 
   /** PATCH /members/:id/role — เปลี่ยน role Member/Admin [Admin] */
   changeRole: (id: string, role: 'Member' | 'Admin'): Promise<Member> =>

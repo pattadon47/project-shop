@@ -6,7 +6,6 @@ export interface User {
   lastname: string;
   email: string;
   role: 'Member' | 'Admin';
-  status: 'active' | 'inactive';
 }
 
 interface AuthContextType {
